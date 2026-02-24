@@ -7,23 +7,30 @@ import ProductList from './Pages/ProductList'
 import Contact from './Pages/Contact'
 import Nav from './CustomComponents/Nav'
 import Auth from './Pages/Auth'
+import AppCntxt from './appContext'
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [email, setEmail] = useState("")
+  const [shoppingCart, setShoppingCart] = useState([])
   return (
-    <div className="bg-orange-100 max-w-5xl m-auto">
-      <Nav />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path="/products" element={<ProductList />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/cart" element={<Contact />} />
-        <Route path="/checkout" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+    <AppCntxt.Provider value={{ isLoggedIn, email, shoppingCart, setShoppingCart, setEmail, setIsLoggedIn }}>
 
-    </div>
+      <div className="bg-orange-100 max-w-5xl m-auto">
+        <Nav />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/cart" element={<Contact />} />
+          <Route path="/checkout" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+
+      </div>
+    </AppCntxt.Provider>
   )
 }
 const NotFound = () => {

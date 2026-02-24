@@ -1,22 +1,54 @@
+import AppCntxt from "@/appContext"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import users from "@/data/users"
+import { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
-import { Link } from "react-router"
+import { Link, redirect, useNavigate } from "react-router"
 
 const AuthForm = () => {
     const [hasAccount, setHasAccount] = useState(true)
     const { register, handleSubmit, formState: { errors } } = useForm()
+    const { setIsLoggedIn, setEmail } = useContext(AppCntxt)
+    const navigate = useNavigate()
 
     const handleSwitchAccount = (input: boolean) => {
         setHasAccount(input)
     }
     const onFormSubmit = (data) => {
         console.log(data)
-        if (!hasAccount && (data.password !== data.confirm_password)) {
-            alert("🚨🚨🚨Sorry, Passwords do not match")
-            return
+        if (!hasAccount) {
+            if (data.password !== data.confirm_password) {
+                alert("🚨🚨🚨Sorry, Passwords do not match")
+                return
+            }
+            else {
+                const newUser = {
+                    email: data.email,
+                    password: data.password
+                }
+                users.push(newUser)
+
+                setIsLoggedIn(true)
+                setEmail(data.email)
+                navigate("/")
+                alert("Account created successfully")
+                console.log(users)
+            }
+        }
+        else {
+            const user = users.find((user) => user.email === data.email && user.password === data.password)
+            if (user) {
+                alert("Welcome back")
+                setIsLoggedIn(true)
+                setEmail(data.email)
+                navigate("/")
+            }
+            else {
+                alert("Invalid email or password")
+            }
         }
         console.log(data)
+
     }
 
     return (
