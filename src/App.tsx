@@ -6,7 +6,7 @@ import ProductDetails from './Pages/ProductDetails'
 import ProductList from './Pages/ProductList'
 import Contact from './Pages/Contact'
 import Nav from './CustomComponents/Nav'
-
+import Auth from './Pages/Auth'
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/auth" element={<Contact />} />
+        <Route path="/auth" element={<Auth />} />
         <Route path="/cart" element={<Contact />} />
         <Route path="/checkout" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
