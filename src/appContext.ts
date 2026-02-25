@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 interface AppContextType {
     isLoggedIn: boolean
-    email: string,
+    email: string | null,
     shoppingCart: number[]
     setShoppingCart: (value: []) => void
     setEmail: (value: string) => void

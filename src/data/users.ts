@@ -11,6 +11,10 @@ const users: User[] = [
     {
         email: "seguylinux@gmail.com",
         password: "81532Njies_!"
+    },
+    {
+        email: "2raymoori@gmail.com",
+        password: "2raymoori@gmail.com"
     }
 ]
 

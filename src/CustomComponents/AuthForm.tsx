@@ -9,6 +9,8 @@ const AuthForm = () => {
     const [hasAccount, setHasAccount] = useState(true)
     const { register, handleSubmit, formState: { errors } } = useForm()
     const { setIsLoggedIn, setEmail } = useContext(AppCntxt)
+    const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<string | null>(null)
     const navigate = useNavigate()
 
     const handleSwitchAccount = (input: boolean) => {
@@ -18,7 +20,8 @@ const AuthForm = () => {
         console.log(data)
         if (!hasAccount) {
             if (data.password !== data.confirm_password) {
-                alert("🚨🚨🚨Sorry, Passwords do not match")
+                setError("🚨🚨🚨Sorry, Passwords do not match")
+                setSuccess(null)
                 return
             }
             else {
@@ -27,24 +30,33 @@ const AuthForm = () => {
                     password: data.password
                 }
                 users.push(newUser)
-
-                setIsLoggedIn(true)
-                setEmail(data.email)
-                navigate("/")
-                alert("Account created successfully")
+                //setIsLoggedIn(true)
+                //setEmail(data.email)
+                setSuccess("Account created successfully. Please Login")
+                setHasAccount(true)
+                setError(null)
                 console.log(users)
             }
         }
         else {
             const user = users.find((user) => user.email === data.email && user.password === data.password)
             if (user) {
-                alert("Welcome back")
                 setIsLoggedIn(true)
                 setEmail(data.email)
+                localStorage.setItem("isLoggedIn", "true")
+                localStorage.setItem("email", data.email)
                 navigate("/")
             }
             else {
-                alert("Invalid email or password")
+                const checkAccount = users.find((user) => user.email === data.email || user.password === data.password)
+                if (checkAccount) {
+                    setError("Invalid email or password")
+                    setSuccess(null)
+                }
+                else {
+                    setError("Account does not exist")
+                    setSuccess(null)
+                }
             }
         }
         console.log(data)
@@ -57,6 +69,8 @@ const AuthForm = () => {
                 <h1 className="font-bold text-2xl my-6 italic">{hasAccount ? "LogIn" : "Sign Up"}</h1>
 
                 <form onSubmit={handleSubmit(onFormSubmit)}>
+                    {error && <h1 className="text-white bg-red-400 p-2 rounded-sm mb-2">{error}</h1>}
+                    {success && <h1 className="text-white bg-green-400 p-2 rounded-sm mb-2">{success}</h1>}
                     <div className="mb-4">
                         <label className="mb-2 block" htmlFor="email">Email</label>
                         <input {...register("email", {
@@ -99,20 +113,20 @@ const AuthForm = () => {
                         )
                     }
                 </form>
-                <p className="mt-4 font-serif text-shadow-2xs text-[10px] text-gray-500 text-center ">
+                <div className="mt-4 font-serif text-shadow-2xs text-[10px] text-gray-500 text-center ">
                     {hasAccount ? (
                         <div className="flex items-center gap-1  text-center">
-                            <p>No Account Yet?</p>
+                            <span>No Account Yet?</span>
                             <Button onClick={() => handleSwitchAccount(false)} className="bg-orange-100 hover:bg-orange-100 hover:cursor-pointer hover:underline text-orange-500 p-0 m-0 text-sm rounded">Sign Up</Button>
                         </div>
                     ) : (
                         <div className="flex items-center gap-1 text-center">
-                            <p>Already have an account?</p>
+                            <span>Already have an account?</span>
                             <Button onClick={() => handleSwitchAccount(true)} className="bg-orange-100 hover:bg-orange-100 hover:cursor-pointer hover:underline text-orange-500 p-0 m-0 text-sm rounded">LogIn</Button>
                         </div>
                     )
                     }
-                </p>
+                </div>
             </section>
 
         </div>
